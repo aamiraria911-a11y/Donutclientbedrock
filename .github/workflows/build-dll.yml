@@ -1,0 +1,31 @@
+name: Build Donut Client DLL
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*.cpp'
+      - '**/*.h'
+      - '**/*.vcxproj'
+      - '**/*.sln'
+      - '.github/workflows/build-dll.yml'
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - name: Locate solution
+        shell: pwsh
+        run: |
+          $sln = Get-ChildItem -Recurse -Filter Horion.sln | Select-Object -First 1
+          if (-not $sln) { throw 'Horion.sln not found. Upload extracted v0.5 project files first.' }
+          "SOLUTION=$($sln.FullName)" >> $env:GITHUB_ENV
+      - name: Build Release x64
+        shell: pwsh
+        run: msbuild "$env:SOLUTION" /m /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
+      - name: Upload compiled DLLs
+        uses: actions/upload-artifact@v4
+        with:
+          name: DonutClient-x64-DLL
+          path: '**/Release/**/*.dll'
+          if-no-files-found: error
