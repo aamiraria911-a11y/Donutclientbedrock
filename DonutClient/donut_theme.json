@@ -1,0 +1,1 @@
+{"name":"Donut Client","version":"0.5-source","keybind":"RIGHT_SHIFT","colors":{"background":"#100B1B","surface":"#21142F","accent":"#AA65FF","text":"#F5EEFF"},"amethyst":{"radius":24,"enabled":false},"hud":{"watermark":true,"fps":true,"cps":true}}
