@@ -20,6 +20,9 @@ jobs:
           $sln = Get-ChildItem -Recurse -Filter Horion.sln | Select-Object -First 1
           if (-not $sln) { throw 'Horion.sln not found. Upload extracted v0.5 project files first.' }
           "SOLUTION=$($sln.FullName)" >> $env:GITHUB_ENV
+      - name: Restore NuGet packages
+        shell: pwsh
+        run: nuget restore "$env:SOLUTION" -NonInteractive
       - name: Build Release x64
         shell: pwsh
         run: msbuild "$env:SOLUTION" /m /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
